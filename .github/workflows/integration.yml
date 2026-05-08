@@ -1,0 +1,29 @@
+name: Integration
+
+on:
+  schedule:
+    - cron: '0 7 * * *'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'examples/integration-test.ts'
+      - 'src/**'
+  workflow_dispatch:
+
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js 22.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Run integration tests
+        run: yarn test:integration
