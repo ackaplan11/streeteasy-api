@@ -47,7 +47,7 @@
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.0",
-    "wrangler": "^3.99.0"
+    "wrangler": "^4"
   },
   "dependencies": {
     "graphql": "^16.8.1",
