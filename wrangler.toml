@@ -2,15 +2,16 @@ name = "streeteasy-watcher"
 main = "src/worker/entry.ts"
 compatibility_date = "2025-01-01"
 
+# Cron-triggered only — no HTTP endpoint needed, no workers.dev publish.
+workers_dev = false
+
 [triggers]
 crons = ["*/10 * * * *"]
 
-# Cloudflare KV namespace for persisted state. Create with:
-#   wrangler kv namespace create WATCHER_STATE
-# then paste the returned id below.
+# Cloudflare KV namespace for persisted state.
 [[kv_namespaces]]
 binding = "WATCHER_STATE"
-id = "REPLACE_ME_AFTER_kv_namespace_create"
+id = "3fbe61e5930b4809a4a5ab85a1fee263"
 
 # Non-secret defaults. Override per-environment as needed.
 [vars]
