@@ -1,4 +1,3 @@
-import { promises as fs } from "fs";
 import { Areas, AreaCode } from "../api/constants";
 
 export interface WatcherSpec {
@@ -9,9 +8,7 @@ export interface WatcherSpec {
 }
 
 export interface WatchersConfig {
-  /** Area codes to search over. Resolved from Areas.<NAME>. */
   areas: AreaCode[];
-  /** One entry per watcher; label must be unique. */
   watchers: WatcherSpec[];
 }
 
@@ -20,28 +17,28 @@ interface RawConfig {
   watchers: WatcherSpec[];
 }
 
-/**
- * Load a watchers config from JSON. Area names are looked up in Areas; unknown
- * names throw. Duplicate labels throw.
- */
-export async function loadWatchersConfig(
-  filePath: string,
-): Promise<WatchersConfig> {
-  const raw = await fs.readFile(filePath, "utf8");
-  const parsed = JSON.parse(raw) as RawConfig;
+export function parseWatchersConfig(raw: string): WatchersConfig {
+  let parsed: RawConfig;
+  try {
+    parsed = JSON.parse(raw) as RawConfig;
+  } catch (err) {
+    throw new Error(
+      `WATCHERS_JSON is not valid JSON: ${err instanceof Error ? err.message : String(err)}`,
+    );
+  }
 
   if (!Array.isArray(parsed.areas) || parsed.areas.length === 0) {
-    throw new Error(`${filePath}: "areas" must be a non-empty string array`);
+    throw new Error(`"areas" must be a non-empty string array`);
   }
   if (!Array.isArray(parsed.watchers) || parsed.watchers.length === 0) {
-    throw new Error(`${filePath}: "watchers" must be a non-empty array`);
+    throw new Error(`"watchers" must be a non-empty array`);
   }
 
   const areaMap = Areas as unknown as Record<string, AreaCode>;
   const areas: AreaCode[] = parsed.areas.map((name) => {
     const code = areaMap[name];
     if (typeof code !== "number") {
-      throw new Error(`${filePath}: unknown area "${name}"`);
+      throw new Error(`unknown area "${name}"`);
     }
     return code;
   });
@@ -49,7 +46,7 @@ export async function loadWatchersConfig(
   const seen = new Set<string>();
   for (const spec of parsed.watchers) {
     if (seen.has(spec.label)) {
-      throw new Error(`${filePath}: duplicate watcher label "${spec.label}"`);
+      throw new Error(`duplicate watcher label "${spec.label}"`);
     }
     seen.add(spec.label);
     if (
@@ -58,7 +55,7 @@ export async function loadWatchersConfig(
       typeof spec.bedroomUpper !== "number"
     ) {
       throw new Error(
-        `${filePath}: watcher "${spec.label}" is missing numeric fields`,
+        `watcher "${spec.label}" is missing numeric fields`,
       );
     }
   }

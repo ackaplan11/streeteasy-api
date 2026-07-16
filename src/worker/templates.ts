@@ -1,5 +1,5 @@
 import { SearchRentalListing } from "../api/types";
-import { PriceDrop } from "../watcher/watcher";
+import { PriceDrop } from "./poll";
 
 export interface EmailPayload {
   newListings: SearchRentalListing[];

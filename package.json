@@ -11,21 +11,17 @@
     "build": "tsc",
     "clean": "rm -rf dist",
     "format": "prettier --write \"src/**/*.ts\"",
-    "prepare": "yarn clean && yarn build",
-    "prepublishOnly": "yarn test && yarn lint",
-    "preversion": "yarn lint",
-    "version": "yarn format && git add -A src",
-    "postversion": "git push && git push --tags",
-    "publish:npm": "yarn clean && yarn build && npm publish",
     "example": "ts-node examples/search-rentals.ts",
     "example:details": "ts-node examples/rental-details.ts",
-    "watch:start": "ts-node src/bin/watch-server.ts",
-    "watch:start:built": "node dist/bin/watch-server.js",
+    "worker:dev": "wrangler dev",
+    "worker:deploy": "wrangler deploy",
+    "worker:tail": "wrangler tail",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:integration": "ts-node examples/integration-test.ts",
-    "lint": "eslint . --ext .ts"
+    "lint": "eslint . --ext .ts",
+    "typecheck": "tsc --noEmit"
   },
   "license": "MIT",
   "repository": {
@@ -39,10 +35,10 @@
     "nyc"
   ],
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250101.0",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.11.24",
     "@types/uuid": "^10.0.0",
-    "@types/ws": "^8.18.1",
     "@typescript-eslint/eslint-plugin": "^7.1.0",
     "@typescript-eslint/parser": "^7.1.0",
     "eslint": "^8.57.0",
@@ -50,14 +46,12 @@
     "prettier": "^3.5.1",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.0"
+    "typescript": "^5.5.0",
+    "wrangler": "^3.99.0"
   },
   "dependencies": {
-    "dotenv": "^17.4.2",
     "graphql": "^16.8.1",
     "graphql-request": "^5.2.0",
-    "resend": "^6.17.2",
-    "uuid": "^11.1.0",
-    "ws": "^8.21.1"
+    "uuid": "^11.1.0"
   }
 }

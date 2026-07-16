@@ -1,0 +1,30 @@
+name = "streeteasy-watcher"
+main = "src/worker/entry.ts"
+compatibility_date = "2025-01-01"
+
+[triggers]
+crons = ["*/10 * * * *"]
+
+# Cloudflare KV namespace for persisted state. Create with:
+#   wrangler kv namespace create WATCHER_STATE
+# then paste the returned id below.
+[[kv_namespaces]]
+binding = "WATCHER_STATE"
+id = "REPLACE_ME_AFTER_kv_namespace_create"
+
+# Non-secret defaults. Override per-environment as needed.
+[vars]
+WATCHERS_JSON = """
+{
+  \"areas\": [\"BUSHWICK\", \"RIDGEWOOD\", \"WILLIAMSBURG\", \"EAST_WILLIAMSBURG\"],
+  \"watchers\": [
+    { \"label\": \"studios-1br\", \"upperPrice\": 3200, \"bedroomLower\": 0, \"bedroomUpper\": 1 },
+    { \"label\": \"2br\",         \"upperPrice\": 5200, \"bedroomLower\": 2, \"bedroomUpper\": 2 }
+  ]
+}
+"""
+RESEND_FROM = "onboarding@resend.dev"
+RESEND_TO = "ac.kaplan11@gmail.com"
+
+# Secrets (not in this file) — set with:
+#   wrangler secret put RESEND_API_KEY

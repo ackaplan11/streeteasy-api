@@ -8,6 +8,11 @@ state.json.*.tmp
 ### Local planning docs (untracked) ###
 notes/
 
+### Cloudflare Workers ###
+.dev.vars
+.wrangler/
+dist/
+
 ### Node ###
 # Logs
 logs
