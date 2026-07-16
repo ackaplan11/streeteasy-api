@@ -6,9 +6,12 @@ compatibility_date = "2025-01-01"
 workers_dev = false
 
 [triggers]
-# Cron runs in UTC. 12-23 UTC ≈ 8am-7:50pm ET during EDT (Mar-Nov)
-# and 7am-6:50pm ET during EST (Nov-Mar). No overnight polling.
-crons = ["*/10 12-23 * * *"]
+# All crons run in UTC.
+# - Poll cron: 12-23 UTC ≈ 8am-7:50pm ET during EDT (Mar-Nov),
+#   7am-6:50pm ET during EST (Nov-Mar). No overnight polling.
+# - Reminder cron: 15:00 UTC (11am ET during EDT). After POLL_CUTOFF
+#   passes, sends a daily email nagging you to delete the worker.
+crons = ["*/10 12-23 * * *", "0 15 * * *"]
 
 # Cloudflare KV namespace for persisted state.
 [[kv_namespaces]]
