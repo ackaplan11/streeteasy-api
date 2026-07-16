@@ -8,6 +8,7 @@ import { sendListingEmail, ResendEnv } from "./email";
 export interface Env extends ResendEnv {
   WATCHER_STATE: KVNamespace;
   WATCHERS_JSON: string;
+  POLL_CUTOFF?: string;
 }
 
 export default {
@@ -22,6 +23,17 @@ export default {
 
 async function runOnce(env: Env, scheduledTime: number): Promise<void> {
   const startedAt = new Date(scheduledTime).toISOString();
+
+  if (env.POLL_CUTOFF) {
+    const cutoff = Date.parse(env.POLL_CUTOFF);
+    if (Number.isNaN(cutoff)) {
+      console.error(`[cutoff] invalid POLL_CUTOFF ${env.POLL_CUTOFF}, ignoring`);
+    } else if (scheduledTime >= cutoff) {
+      console.log(`[cutoff] ${startedAt} ≥ ${env.POLL_CUTOFF}, skipping poll`);
+      return;
+    }
+  }
+
   console.log(`[poll] cron fired at ${startedAt}`);
 
   const config = parseWatchersConfig(env.WATCHERS_JSON);

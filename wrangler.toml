@@ -6,7 +6,9 @@ compatibility_date = "2025-01-01"
 workers_dev = false
 
 [triggers]
-crons = ["*/10 * * * *"]
+# Cron runs in UTC. 12-23 UTC ≈ 8am-7:50pm ET during EDT (Mar-Nov)
+# and 7am-6:50pm ET during EST (Nov-Mar). No overnight polling.
+crons = ["*/10 12-23 * * *"]
 
 # Cloudflare KV namespace for persisted state.
 [[kv_namespaces]]
@@ -26,6 +28,10 @@ WATCHERS_JSON = """
 """
 RESEND_FROM = "onboarding@resend.dev"
 RESEND_TO = "ac.kaplan11@gmail.com"
+
+# Hard cutoff — no polls fire on or after this instant.
+# 2026-09-16T04:00:00Z = 2026-09-16 00:00 ET, i.e. runs through end of Sept 15 ET.
+POLL_CUTOFF = "2026-09-16T04:00:00Z"
 
 # Secrets (not in this file) — set with:
 #   wrangler secret put RESEND_API_KEY
