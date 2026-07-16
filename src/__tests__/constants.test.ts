@@ -1,4 +1,4 @@
-import { Areas, Amenities } from "../constants";
+import { Areas, Amenities } from "../api/constants";
 
 describe("Areas", () => {
   it("should have correct area codes", () => {

@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const index_1 = require("../index");
-const constants_1 = require("../constants");
+const client_1 = require("../api/client");
+const constants_1 = require("../api/constants");
 // Skip integration tests by default
 // Run with: yarn test:integration
 describe.skip("StreetEasy API Integration", () => {
     let client;
     beforeAll(() => {
-        client = new index_1.StreetEasyClient();
+        client = new client_1.StreetEasyClient();
     });
     describe("searchRentals", () => {
         // Add reasonable timeout for API calls
@@ -120,7 +120,7 @@ describe.skip("StreetEasy API Integration", () => {
         });
         it("should handle network timeouts", async () => {
             // Create client with impossibly low timeout
-            const timeoutClient = new index_1.StreetEasyClient({
+            const timeoutClient = new client_1.StreetEasyClient({
                 endpoint: "https://api-v6.streeteasy.com/?sleep=5000", // Force delay
             });
             const params = {

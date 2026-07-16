@@ -1,10 +1,10 @@
-import { StreetEasyClient } from "../index";
-import { Areas, Amenities } from "../constants";
+import { StreetEasyClient } from "../api/client";
+import { Areas, Amenities } from "../api/constants";
 import type {
   SearchRentalsInput,
   RentalEdge,
   SearchRentalsResponse,
-} from "../types";
+} from "../api/types";
 
 // Skip integration tests by default
 // Run with: yarn test:integration

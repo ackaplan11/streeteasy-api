@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const graphql_request_1 = require("graphql-request");
-const index_1 = require("../index");
-const constants_1 = require("../constants");
-const queries_1 = require("../queries");
+const client_1 = require("../api/client");
+const constants_1 = require("../api/constants");
+const queries_1 = require("../api/queries");
 // Type guard functions - imported from examples for testing
 function isOrganicOrFeaturedEdge(edge) {
     return (edge.__typename === "OrganicRentalEdge" ||
@@ -84,26 +84,26 @@ describe("StreetEasyClient", () => {
     });
     describe("constructor", () => {
         it("should create client with default endpoint", () => {
-            client = new index_1.StreetEasyClient();
+            client = new client_1.StreetEasyClient();
             expect(graphql_request_1.GraphQLClient).toHaveBeenCalledWith("https://api-v6.streeteasy.com/", expect.any(Object));
         });
         it("should create client with custom endpoint", () => {
             const customEndpoint = "https://custom.endpoint/graphql";
-            client = new index_1.StreetEasyClient({ endpoint: customEndpoint });
+            client = new client_1.StreetEasyClient({ endpoint: customEndpoint });
             expect(graphql_request_1.GraphQLClient).toHaveBeenCalledWith(customEndpoint, expect.any(Object));
         });
         it("should handle empty config object", () => {
-            client = new index_1.StreetEasyClient({});
+            client = new client_1.StreetEasyClient({});
             expect(graphql_request_1.GraphQLClient).toHaveBeenCalledWith("https://api-v6.streeteasy.com/", expect.any(Object));
         });
         it("should handle undefined config", () => {
-            client = new index_1.StreetEasyClient(undefined);
+            client = new client_1.StreetEasyClient(undefined);
             expect(graphql_request_1.GraphQLClient).toHaveBeenCalledWith("https://api-v6.streeteasy.com/", expect.any(Object));
         });
     });
     describe("request", () => {
         beforeEach(() => {
-            client = new index_1.StreetEasyClient();
+            client = new client_1.StreetEasyClient();
         });
         it("should make successful request", async () => {
             const mockResponse = {
@@ -116,7 +116,7 @@ describe("StreetEasyClient", () => {
                 request: jest.fn().mockResolvedValue(mockResponse),
             };
             graphql_request_1.GraphQLClient.mockImplementation(() => mockClient);
-            client = new index_1.StreetEasyClient();
+            client = new client_1.StreetEasyClient();
             const response = await client.request(queries_1.SEARCH_RENTALS_QUERY, {
                 filters: {},
             });
@@ -130,7 +130,7 @@ describe("StreetEasyClient", () => {
                 request: jest.fn().mockRejectedValue(new Error("API Error")),
             };
             graphql_request_1.GraphQLClient.mockImplementation(() => mockClient);
-            client = new index_1.StreetEasyClient();
+            client = new client_1.StreetEasyClient();
             await expect(client.request(queries_1.SEARCH_RENTALS_QUERY, { filters: {} })).rejects.toThrow("StreetEasy GraphQL Error: API Error");
         });
         it("should handle string errors", async () => {
@@ -138,7 +138,7 @@ describe("StreetEasyClient", () => {
                 request: jest.fn().mockRejectedValue("String error message"),
             };
             graphql_request_1.GraphQLClient.mockImplementation(() => mockClient);
-            client = new index_1.StreetEasyClient();
+            client = new client_1.StreetEasyClient();
             await expect(client.request(queries_1.SEARCH_RENTALS_QUERY)).rejects.toThrow("StreetEasy GraphQL Error: String error message");
         });
         it("should handle null/undefined errors", async () => {
@@ -146,7 +146,7 @@ describe("StreetEasyClient", () => {
                 request: jest.fn().mockRejectedValue(null),
             };
             graphql_request_1.GraphQLClient.mockImplementation(() => mockClient);
-            client = new index_1.StreetEasyClient();
+            client = new client_1.StreetEasyClient();
             await expect(client.request(queries_1.SEARCH_RENTALS_QUERY)).rejects.toThrow("StreetEasy GraphQL Error: null");
         });
         it("should handle ClientError with validation errors", async () => {
@@ -174,7 +174,7 @@ describe("StreetEasyClient", () => {
                 request: jest.fn().mockRejectedValue(validationError),
             };
             graphql_request_1.GraphQLClient.mockImplementation(() => mockClient);
-            client = new index_1.StreetEasyClient();
+            client = new client_1.StreetEasyClient();
             await expect(client.request(queries_1.SEARCH_RENTALS_QUERY, {
                 input: {
                 /* invalid data */
@@ -184,7 +184,7 @@ describe("StreetEasyClient", () => {
     });
     describe("searchRentals", () => {
         beforeEach(() => {
-            client = new index_1.StreetEasyClient();
+            client = new client_1.StreetEasyClient();
         });
         it("should make rental search request with inlined enum defaults", async () => {
             const mockClient = {
@@ -196,7 +196,7 @@ describe("StreetEasyClient", () => {
                 }),
             };
             graphql_request_1.GraphQLClient.mockImplementation(() => mockClient);
-            client = new index_1.StreetEasyClient();
+            client = new client_1.StreetEasyClient();
             const response = await client.searchRentals({ filters: {} });
             expect(response.searchRentals).toBeDefined();
             const { query, variables } = getLastRequestCall(mockClient.request);
@@ -212,7 +212,7 @@ describe("StreetEasyClient", () => {
                 request: jest.fn().mockRejectedValue(new Error("API Error")),
             };
             graphql_request_1.GraphQLClient.mockImplementation(() => mockClient);
-            client = new index_1.StreetEasyClient();
+            client = new client_1.StreetEasyClient();
             const params = {
                 filters: {},
             };
@@ -228,7 +228,7 @@ describe("StreetEasyClient", () => {
                 }),
             };
             graphql_request_1.GraphQLClient.mockImplementation(() => mockClient);
-            client = new index_1.StreetEasyClient();
+            client = new client_1.StreetEasyClient();
             await client.searchRentals({ filters: {} });
             const { query } = getLastRequestCall(mockClient.request);
             expect(query).toContain("adStrategy: NONE");
@@ -244,7 +244,7 @@ describe("StreetEasyClient", () => {
                 }),
             };
             graphql_request_1.GraphQLClient.mockImplementation(() => mockClient);
-            client = new index_1.StreetEasyClient();
+            client = new client_1.StreetEasyClient();
             await client.searchRentals({
                 filters: {},
                 userSearchToken: "custom-token",
@@ -260,7 +260,7 @@ describe("StreetEasyClient", () => {
                 }),
             };
             graphql_request_1.GraphQLClient.mockImplementation(() => mockClient);
-            client = new index_1.StreetEasyClient();
+            client = new client_1.StreetEasyClient();
             await client.searchRentals({
                 filters: {},
                 sorting: { attribute: "LISTED_AT", direction: "DESCENDING" },
@@ -278,7 +278,7 @@ describe("StreetEasyClient", () => {
                 }),
             };
             graphql_request_1.GraphQLClient.mockImplementation(() => mockClient);
-            client = new index_1.StreetEasyClient();
+            client = new client_1.StreetEasyClient();
             await client.searchRentals({
                 filters: {
                     areas: [constants_1.Areas.MANHATTAN, constants_1.Areas.QUEENS],
@@ -300,7 +300,7 @@ describe("StreetEasyClient", () => {
         // Additional tests for the new federated search rentals query structure
         describe("Federated search edge types", () => {
             beforeEach(() => {
-                client = new index_1.StreetEasyClient();
+                client = new client_1.StreetEasyClient();
             });
             it("should handle OrganicRentalEdge type correctly", async () => {
                 const mockResponse = {
@@ -371,7 +371,7 @@ describe("StreetEasyClient", () => {
                     request: jest.fn().mockResolvedValue(mockResponse),
                 };
                 graphql_request_1.GraphQLClient.mockImplementation(() => mockClient);
-                client = new index_1.StreetEasyClient();
+                client = new client_1.StreetEasyClient();
                 const params = {
                     filters: {},
                 };
@@ -467,7 +467,7 @@ describe("StreetEasyClient", () => {
                     request: jest.fn().mockResolvedValue(mockResponse),
                 };
                 graphql_request_1.GraphQLClient.mockImplementation(() => mockClient);
-                client = new index_1.StreetEasyClient();
+                client = new client_1.StreetEasyClient();
                 const params = {
                     filters: {},
                 };
@@ -560,7 +560,7 @@ describe("StreetEasyClient", () => {
                     request: jest.fn().mockResolvedValue(mockResponse),
                 };
                 graphql_request_1.GraphQLClient.mockImplementation(() => mockClient);
-                client = new index_1.StreetEasyClient();
+                client = new client_1.StreetEasyClient();
                 const params = {
                     filters: {},
                 };
@@ -767,7 +767,7 @@ describe("StreetEasyClient", () => {
                     request: jest.fn().mockResolvedValue(mockResponse),
                 };
                 graphql_request_1.GraphQLClient.mockImplementation(() => mockClient);
-                client = new index_1.StreetEasyClient();
+                client = new client_1.StreetEasyClient();
                 const params = {
                     filters: {},
                 };
@@ -876,7 +876,7 @@ describe("StreetEasyClient", () => {
                     request: jest.fn().mockResolvedValue(mockResponse),
                 };
                 graphql_request_1.GraphQLClient.mockImplementation(() => mockClient);
-                client = new index_1.StreetEasyClient();
+                client = new client_1.StreetEasyClient();
                 const params = {
                     filters: {},
                 };
@@ -971,7 +971,7 @@ describe("StreetEasyClient", () => {
                     request: jest.fn().mockResolvedValue(mockResponse),
                 };
                 graphql_request_1.GraphQLClient.mockImplementation(() => mockClient);
-                client = new index_1.StreetEasyClient();
+                client = new client_1.StreetEasyClient();
                 const params = {
                     filters: {},
                 };
@@ -1030,7 +1030,7 @@ describe("StreetEasyClient", () => {
                     request: jest.fn().mockResolvedValue(mockResponse),
                 };
                 graphql_request_1.GraphQLClient.mockImplementation(() => mockClient);
-                client = new index_1.StreetEasyClient();
+                client = new client_1.StreetEasyClient();
                 const params = {
                     filters: {},
                 };
@@ -1051,7 +1051,7 @@ describe("StreetEasyClient", () => {
     });
     describe("getRentalListingDetails", () => {
         beforeEach(() => {
-            client = new index_1.StreetEasyClient();
+            client = new client_1.StreetEasyClient();
         });
         it("should fetch rental listing details", async () => {
             const mockResponse = {
@@ -1084,7 +1084,7 @@ describe("StreetEasyClient", () => {
                 request: jest.fn().mockResolvedValue(mockResponse),
             };
             graphql_request_1.GraphQLClient.mockImplementation(() => mockClient);
-            client = new index_1.StreetEasyClient();
+            client = new client_1.StreetEasyClient();
             const listingID = "4652509";
             const response = await client.getRentalListingDetails(listingID);
             expect(response).toEqual(mockResponse);
@@ -1095,7 +1095,7 @@ describe("StreetEasyClient", () => {
                 request: jest.fn().mockRejectedValue(new Error("API Error")),
             };
             graphql_request_1.GraphQLClient.mockImplementation(() => mockClient);
-            client = new index_1.StreetEasyClient();
+            client = new client_1.StreetEasyClient();
             const listingID = "4652509";
             await expect(client.getRentalListingDetails(listingID)).rejects.toThrow("StreetEasy GraphQL Error: API Error");
         });
@@ -1138,7 +1138,7 @@ describe("StreetEasyClient", () => {
                 request: jest.fn().mockResolvedValue(mockResponse),
             };
             graphql_request_1.GraphQLClient.mockImplementation(() => mockClient);
-            client = new index_1.StreetEasyClient();
+            client = new client_1.StreetEasyClient();
             const listingID = "4652509";
             const response = await client.getRentalListingDetails(listingID);
             expect(response).toEqual(mockResponse);
@@ -1154,7 +1154,7 @@ describe("StreetEasyClient", () => {
                 request: jest.fn().mockResolvedValue(mockResponse),
             };
             graphql_request_1.GraphQLClient.mockImplementation(() => mockClient);
-            client = new index_1.StreetEasyClient();
+            client = new client_1.StreetEasyClient();
             // Test with a numeric listing ID as string
             await client.getRentalListingDetails("12345");
             expect(mockClient.request).toHaveBeenCalledWith(queries_1.RENTAL_LISTING_DETAILS_QUERY, { listingID: "12345" });
@@ -1326,7 +1326,7 @@ describe("StreetEasyClient", () => {
                 request: jest.fn().mockResolvedValue(mockResponse),
             };
             graphql_request_1.GraphQLClient.mockImplementation(() => mockClient);
-            client = new index_1.StreetEasyClient();
+            client = new client_1.StreetEasyClient();
             const listingID = "4652509";
             const response = await client.getRentalListingDetails(listingID);
             expect(response).toEqual(mockResponse);

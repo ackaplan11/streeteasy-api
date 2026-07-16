@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const constants_1 = require("../constants");
+const constants_1 = require("../api/constants");
 describe("Areas", () => {
     it("should have correct area codes", () => {
         expect(constants_1.Areas.ALL_NYC_AND_NJ).toBe(1);

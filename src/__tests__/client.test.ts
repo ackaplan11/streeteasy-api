@@ -1,19 +1,19 @@
 import { GraphQLClient } from "graphql-request";
-import { StreetEasyClient } from "../index";
-import { Areas, Amenities } from "../constants";
+import { StreetEasyClient } from "../api/client";
+import { Areas, Amenities } from "../api/constants";
 import {
   SEARCH_RENTALS_QUERY,
   RENTAL_LISTING_DETAILS_QUERY,
   buildSearchRentalsQuery,
   gqlValue,
-} from "../queries";
+} from "../api/queries";
 import type {
   SearchRentalsInput,
   OrganicRentalEdge,
   FeaturedRentalEdge,
   SponsoredRentalEdge,
   RentalEdge,
-} from "../types";
+} from "../api/types";
 import { v4 as uuidv4 } from "uuid";
 
 // Type guard functions - imported from examples for testing

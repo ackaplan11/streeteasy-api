@@ -1,6 +1,13 @@
 # Created by https://www.toptal.com/developers/gitignore/api/node
 # Edit at https://www.toptal.com/developers/gitignore?templates=node
 
+### Watcher runtime ###
+state.json
+state.json.*.tmp
+
+### Local planning docs (untracked) ###
+notes/
+
 ### Node ###
 # Logs
 logs

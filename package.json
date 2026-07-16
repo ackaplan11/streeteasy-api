@@ -19,6 +19,8 @@
     "publish:npm": "yarn clean && yarn build && npm publish",
     "example": "ts-node examples/search-rentals.ts",
     "example:details": "ts-node examples/rental-details.ts",
+    "watch:start": "ts-node src/bin/watch-server.ts",
+    "watch:start:built": "node dist/bin/watch-server.js",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
@@ -40,6 +42,7 @@
     "@types/jest": "^29.5.12",
     "@types/node": "^20.11.24",
     "@types/uuid": "^10.0.0",
+    "@types/ws": "^8.18.1",
     "@typescript-eslint/eslint-plugin": "^7.1.0",
     "@typescript-eslint/parser": "^7.1.0",
     "eslint": "^8.57.0",
@@ -50,8 +53,11 @@
     "typescript": "^5.5.0"
   },
   "dependencies": {
+    "dotenv": "^17.4.2",
     "graphql": "^16.8.1",
     "graphql-request": "^5.2.0",
-    "uuid": "^11.1.0"
+    "resend": "^6.17.2",
+    "uuid": "^11.1.0",
+    "ws": "^8.21.1"
   }
 }
